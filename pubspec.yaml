@@ -24,21 +24,19 @@ dev_dependencies:
 
 
 flutter:
-
-
   uses-material-design: true
   assets:
     - assets/images/ride-hailing.png
   fonts:
     - family: CherrySwash
-  fonts:
-    - asset: assets/fonts/CherrySwash-Regular.ttf
+      fonts:
+        - asset: assets/fonts/CherrySwash-Regular.ttf
 
-  flutter_launcher_icons:
-    image_path: assets/images/ride-hailing.png
-    android: "launcher_icon"
-    min_sdk_android: 21
+flutter_launcher_icons:
+  image_path: 'assets/images/ride-hailing.png'
+  android: "launcher_icon"
+  min_sdk_android: 21
 
-  flutter_native_splash:
-    image: assets/images/ride-hailing.png
-    color: "#ffffff"
+flutter_native_splash:
+  image: assets/images/ride-hailing.png
+  color: "#0097a7"
