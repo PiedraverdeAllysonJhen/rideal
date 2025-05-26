@@ -8,7 +8,7 @@ class LoadingScreen extends StatelessWidget {
   const LoadingScreen({
     super.key,
     this.size = 50.0,
-    this.color = Colors.red,
+    this.color = Colors.blue,
   });
 
   @override
@@ -16,7 +16,7 @@ class LoadingScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: LoadingAnimationWidget.fourRotatingDots(
-          color: color,
+          color: Colors.blue,
           size: size,
         ),
       ),

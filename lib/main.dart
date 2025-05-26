@@ -23,8 +23,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Rideal',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF1976D2)),
+        scaffoldBackgroundColor: const Color(0xFFF4F6F8),
         useMaterial3: true,
+        fontFamily: 'Roboto',
       ),
       home: const MyHomePage(title: 'A fast and efficient on-campus vehicle rental app for students and staffs.'),
       debugShowCheckedModeBanner: false,
@@ -44,11 +46,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final uuid = const Uuid();
 
-  static const Color _themeBG = Color(0xfffff5f5);
-  static const Color _themeMain = Color(0xffd32f2f);
-  static const Color _themeLite = Color(0xffffcdd2);
-  static const Color _themeGrey = Color(0xff5a5a5a);
-
+  // Updated Color Scheme
+  static const Color _themeBG = Color(0xFFF4F6F8);     // Light grey background
+  static const Color _themeMain = Color(0xFF1976D2);   // Professional blue
+  static const Color _themeLite = Color(0xFFBBDEFB);   // Light blue accents
+  static const Color _themeGrey = Color(0xFF424242);   // Dark grey for text
 
   late bool _keepScreenOn = false;
   late bool _useLargeTexts = false;
@@ -64,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isAdmin = false;
   int _selectedIndex = 0;
   late Widget _signingScreen;
-  late Widget _loadingScreen = SizedBox();
+  late Widget _loadingScreen = const SizedBox();
   late Widget _dashboardScreen = Container();
   late Widget _currentScreen;
 
@@ -174,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _netImgSm = netImgSm;
           _netImgLg = netImgLg;
         });
-      } catch (e) {
+      } catch (_) {
         setState(() {
           _netImgSm = const SizedBox(width: 15.0);
           _netImgLg = const SizedBox(width: 30.0);

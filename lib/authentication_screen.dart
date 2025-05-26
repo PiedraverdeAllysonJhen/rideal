@@ -21,10 +21,11 @@ class AuthenticationScreen extends StatefulWidget {
 class AuthenticationScreenState extends State<AuthenticationScreen> {
   final uuid = const Uuid();
   final globalDelay = 500;
-  final _themeBG = const Color(0xfffff5f5);
-  final _themeMain = const Color(0xffd32f2f);
-  final _themeLite = const Color(0xffffcdd2);
-  final _bhServer = 'https://bleedingheart-api.vercel.app';
+  final _themeBG = const Color(0xFFF4F6F8); // Soft grey background
+  final _themeMain = const Color(0xFF1976D2); // Blue primary
+  final _themeLite = const Color(0xFFBBDEFB); // Light blue button
+  final _themeGrey = const Color(0xFF424242); // Dark grey text
+  final _bhServer = 'https://cherryblitz-api.vercel.app';
 
   late final double _extraLarge = 36.0;
   late final double _body = 16.0;
@@ -40,7 +41,8 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
   String fullName = '';
   String username = '';
   String photoUrl = '';
-  String apiPhotoUrl = 'https://api.dicebear.com/9.x/open-peeps/svg?seed=Alexander';
+  String apiPhotoUrl =
+      'https://api.dicebear.com/9.x/open-peeps/svg?seed=Alexander';
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -92,8 +94,8 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
     }
 
     final timestamp = DateTime.now().toIso8601String();
-    final accountUuid = uuid.v5(
-        Namespace.oid.value, 'account_${username}_$timestamp');
+    final accountUuid =
+    uuid.v5(Namespace.oid.value, 'account_${username}_$timestamp');
 
     final account = Account(
       uuid: accountUuid,
@@ -141,36 +143,43 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
-            hintText: 'Username',
+            labelText: 'Username',
+            labelStyle: TextStyle(fontSize: _body, color: _themeGrey),
             filled: true,
             fillColor: Colors.white,
-            labelStyle: TextStyle(fontSize: _body),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            prefixIcon: Icon(Icons.person, color: _themeMain),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         TextField(
           controller: _passwordController,
           obscureText: true,
           decoration: InputDecoration(
-            hintText: 'Password',
+            labelText: 'Password',
+            labelStyle: TextStyle(fontSize: _body, color: _themeGrey),
             filled: true,
             fillColor: Colors.white,
-            labelStyle: TextStyle(fontSize: _body),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            prefixIcon: Icon(Icons.lock, color: _themeMain),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,
+          height: 48,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.black,
-              backgroundColor: _themeLite,
+              backgroundColor: _themeMain,
+              foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
             onPressed: _retries >= 3
@@ -182,7 +191,7 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
               _usernameController.clear();
               _passwordController.clear();
             },
-            child: const Text('Sign in'),
+            child: const Text('Sign In', style: TextStyle(fontSize: 16)),
           ),
         ),
       ],
@@ -197,15 +206,12 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
       backgroundColor: _themeBG,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                'assets/images/ride-hailing.png',
-                height: 80.0,
-              ),
-              const SizedBox(height: 8.0),
+              Image.asset('assets/images/ride-hailing.png', height: 80),
+              const SizedBox(height: 12),
               Text(
                 'Rideal',
                 style: TextStyle(
@@ -215,7 +221,7 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
                   color: _themeMain,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               if (!_isPaused) _buildSignInFields(),
             ],
           ),
