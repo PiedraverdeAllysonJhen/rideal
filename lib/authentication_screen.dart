@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/services.dart';
 
 import 'widgets/loading_screen.dart';
 import '../services/database.dart';
@@ -21,10 +24,10 @@ class AuthenticationScreen extends StatefulWidget {
 class AuthenticationScreenState extends State<AuthenticationScreen> {
   final uuid = const Uuid();
   final globalDelay = 500;
-  final _themeBG = const Color(0xFFF4F6F8); // Soft grey background
-  final _themeMain = const Color(0xFF1976D2); // Blue primary
-  final _themeLite = const Color(0xFFBBDEFB); // Light blue button
-  final _themeGrey = const Color(0xFF424242); // Dark grey text
+  final _themeBG = const Color(0xFFF4F6F8);
+  final _themeMain = const Color(0xFF1976D2);
+  final _themeLite = const Color(0xFFBBDEFB);
+  final _themeGrey = const Color(0xFF424242);
   final _bhServer = 'https://cherryblitz-api.vercel.app';
 
   late final double _extraLarge = 36.0;
@@ -41,10 +44,37 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
   String fullName = '';
   String username = '';
   String photoUrl = '';
-  String apiPhotoUrl =
-      'https://api.dicebear.com/9.x/open-peeps/svg?seed=Alexander';
+  String apiPhotoUrl = 'https://api.dicebear.com/9.x/open-peeps/svg?seed=Alexander';
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _launchPrivacyPolicy() async {
+    const url = 'https://devjeyem.github.io/privacy-policy.html';
+
+    try {
+      final uri = Uri.parse(url);
+
+      // Check if we can launch the URL
+      if (await canLaunchUrl(uri)) {
+        final launched = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+
+        if (!launched) {
+          _showToast("Could not open privacy policy");
+        }
+      } else {
+        _showToast("No browser available to open privacy policy");
+      }
+    } on PlatformException catch (e) {
+      print('Platform Exception: ${e.message}');
+      _showToast("Error opening privacy policy: ${e.message ?? 'Unknown error'}");
+    } catch (e) {
+      print('General Exception: $e');
+      _showToast("Unable to open privacy policy");
+    }
+  }
 
   Future<void> authorizeEmail(String tempUsername, String tempPassword) async {
     if (lastLoginClicked >= DateTime.now().millisecondsSinceEpoch - globalDelay) return;
@@ -93,8 +123,7 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
     }
 
     final timestamp = DateTime.now().toIso8601String();
-    final accountUuid =
-    uuid.v5(Namespace.oid.value, 'account_${username}_$timestamp');
+    final accountUuid = uuid.v5(Namespace.oid.value, 'account_${username}_$timestamp');
 
     final account = Account(
       uuid: accountUuid,
@@ -193,6 +222,18 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
             child: const Text('Sign In', style: TextStyle(fontSize: 16)),
           ),
         ),
+        const SizedBox(height: 16),
+        GestureDetector(
+          onTap: _launchPrivacyPolicy,
+          child: Text(
+            'Privacy Policy',
+            style: TextStyle(
+              fontSize: 14,
+              color: _themeMain,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -227,5 +268,12 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

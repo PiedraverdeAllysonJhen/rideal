@@ -7,34 +7,40 @@ version: 1.0.0+1
 environment:
   sdk: ^3.8.0
 
-
 dependencies:
   flutter:
     sdk: flutter
+
+  # Core utilities
   intl: ^0.18.1
-  url_launcher: ^6.2.6
-
-
-
-
   cupertino_icons: ^1.0.8
+
+  # URL launcher - updated for fix
+  url_launcher: ^6.2.5
+  url_launcher_android: ^6.3.0
+
+  # Network and connectivity
+  connectivity_plus: ^6.0.3
+  http: ^1.4.0
+
+  # UI and animations
   loading_animation_widget: ^1.3.0
+  fluttertoast: ^8.2.12
+
+  # App configuration
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.6
   package_info_plus: ^8.3.0
   wakelock_plus: ^1.3.2
-  fluttertoast: ^8.2.12
+
+  # Database and utilities
   sqflite: ^2.4.2
-  http: ^1.4.0
   uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
   flutter_lints: ^5.0.0
-
 
 flutter:
   uses-material-design: true
