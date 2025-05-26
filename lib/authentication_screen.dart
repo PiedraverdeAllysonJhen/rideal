@@ -43,7 +43,6 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
   String photoUrl = '';
   String apiPhotoUrl =
       'https://api.dicebear.com/9.x/open-peeps/svg?seed=Alexander';
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 

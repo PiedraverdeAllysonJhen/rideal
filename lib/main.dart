@@ -9,9 +9,11 @@ import 'widgets/personal_island.dart';
 import 'widgets/app_settings_dialog.dart';
 import 'widgets/custom_bottom_nav_bar.dart';
 import 'authentication_screen.dart';
+import 'widgets/admin_post_vehicle.dart';
 
 import '../services/database.dart';
 import '../models/account.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -225,7 +227,12 @@ class _MyHomePageState extends State<MyHomePage> {
     WakelockPlus.toggle(enable: _keepScreenOn);
 
     _dashboardScreen = Scaffold(
-      body: Stack(
+      body: (_isAdmin && _selectedIndex == 2)
+          ? AdminPostScreen(
+        themeMain: _themeMain,
+        headlineFontSize: _headLine2,
+      )
+          : Stack(
         children: [
           PersonalIsland(
             netImgSm: _netImgSm,
@@ -266,6 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onItemSelected: _handleNavItemSelected,
       ),
     );
+
     _updateCurrentScreen();
   }
 
