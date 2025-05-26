@@ -1,7 +1,7 @@
+// main.dart
 import 'dart:io';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
-
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'widgets/loading_screen.dart';
@@ -46,11 +46,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final uuid = const Uuid();
 
-  // Updated Color Scheme
-  static const Color _themeBG = Color(0xFFF4F6F8);     // Light grey background
-  static const Color _themeMain = Color(0xFF1976D2);   // Professional blue
-  static const Color _themeLite = Color(0xFFBBDEFB);   // Light blue accents
-  static const Color _themeGrey = Color(0xFF424242);   // Dark grey for text
+  static const Color _themeBG = Color(0xFFF4F6F8);
+  static const Color _themeMain = Color(0xFF1976D2);
+  static const Color _themeLite = Color(0xFFBBDEFB);
+  static const Color _themeGrey = Color(0xFF424242);
 
   late bool _keepScreenOn = false;
   late bool _useLargeTexts = false;
@@ -194,14 +193,8 @@ class _MyHomePageState extends State<MyHomePage> {
     await showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text(
-          "Device is Offline",
-          style: TextStyle(fontSize: _headLine2),
-        ),
-        content: Text(
-          "Please check your internet connection.",
-          style: TextStyle(fontSize: _body),
-        ),
+        title: Text("Device is Offline", style: TextStyle(fontSize: _headLine2)),
+        content: Text("Please check your internet connection.", style: TextStyle(fontSize: _body)),
         actions: [
           TextButton(
             onPressed: () async {
@@ -209,13 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.of(context).pop();
               _checkInternetConnection();
             },
-            child: Text(
-              "Retry",
-              style: TextStyle(
-                fontSize: _body,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text("Retry", style: TextStyle(fontSize: _body, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -262,13 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 const SizedBox(width: 12.0),
-                Text(
-                  'v1.0',
-                  style: TextStyle(
-                    fontSize: _body,
-                    color: _themeGrey,
-                  ),
-                ),
+                Text('v1.0', style: TextStyle(fontSize: _body, color: _themeGrey)),
               ],
             ),
           ),
@@ -281,7 +262,6 @@ class _MyHomePageState extends State<MyHomePage> {
         navItem: _selectedIndex,
         isAdminMode: _isAdmin,
         isSignedIn: _isSignedIn,
-        hideAdminFeatures: !_isAdmin,
         isFullyLoaded: !_isLoading,
         onItemSelected: _handleNavItemSelected,
       ),
@@ -298,8 +278,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     bool connected = false;
     try {
-      final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 15));
+      final result = await InternetAddress.lookup('google.com').timeout(const Duration(seconds: 15));
       connected = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
 
       if (_isConnectionLost) {
