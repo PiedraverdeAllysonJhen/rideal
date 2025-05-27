@@ -33,54 +33,83 @@ class HomeAdminScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AdminPostScreen(
-                  themeMain: themeMain,
-                  headlineFontSize: 22,
-                ),
-              ),
-            ),
+            onPressed: () => _navigateToPostScreen(context),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildDashboardHeader(context),
-          Expanded(
-            child: ListView(
-              children: [
-                const SearchBarWidget(),
-                _buildQuickStatsRow(),
-                const PromoSliderWidget(),
-                VehicleCategoriesWidget(themeMain: themeMain),
-                FeaturedVehiclesAdminWidget(vehicles: vehicles, themeMain: themeMain),
-                VehicleListingAdminWidget(vehicles: vehicles, themeMain: themeMain),
-              ],
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFBBDEFB),
+              Colors.white,
+            ],
+            stops: [0.0, 0.6],
           ),
-        ],
+        ),
+        child: Column(
+          children: [
+            _buildDashboardHeader(context),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  const SizedBox(height: 16),
+                  const SearchBarWidget(),
+                  _buildQuickStatsRow(),
+                  const PromoSliderWidget(),
+                  VehicleCategoriesWidget(themeMain: themeMain),
+                  const SizedBox(height: 24),
+                  FeaturedVehiclesAdminWidget(
+                    vehicles: vehicles,
+                    themeMain: themeMain,
+                  ),
+                  VehicleListingAdminWidget(
+                    vehicles: vehicles,
+                    themeMain: themeMain,
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: themeMain,
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AdminPostScreen(
-              themeMain: themeMain,
-              headlineFontSize: 22,
-            ),
-          ),
-        ),
+        onPressed: () => _navigateToPostScreen(context),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 
+  void _navigateToPostScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdminPostScreen(
+          themeMain: themeMain,
+          headlineFontSize: 22,
+        ),
+      ),
+    );
+  }
+
   Widget _buildDashboardHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           Expanded(
@@ -107,7 +136,7 @@ class HomeAdminScreen extends StatelessWidget {
             ),
           ),
           _buildStatBadge('Active', '24', themeMain),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
           _buildStatBadge('Available', '18', Colors.green),
         ],
       ),
@@ -118,15 +147,15 @@ class HomeAdminScreen extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             value,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: color,
             ),
@@ -138,6 +167,7 @@ class HomeAdminScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -146,88 +176,136 @@ class HomeAdminScreen extends StatelessWidget {
 
   Widget _buildQuickStatsRow() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         children: [
-          Expanded(
-            child: _buildQuickStatItem('Users', '1,234', Icons.people_alt),
-          ),
-          Expanded(
-            child: _buildQuickStatItem('Revenue', '\$12,345', Icons.attach_money),
-          ),
-          Expanded(
-            child: _buildQuickStatItem('Bookings', '89', Icons.calendar_today),
-          ),
+          Expanded(child: _buildQuickStatItem('Users', '1,234', Icons.people_alt)),
+          Expanded(child: _buildQuickStatItem('Revenue', '\$12,345', Icons.attach_money)),
+          Expanded(child: _buildQuickStatItem('Bookings', '89', Icons.calendar_today)),
         ],
       ),
     );
   }
 
   Widget _buildQuickStatItem(String title, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, color: themeMain, size: 28),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: themeMain,
-          ),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          children: [
+            Icon(icon, color: themeMain, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: themeMain,
+              ),
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
         ),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
   void _showAnalytics(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Platform Analytics'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView(
-            shrinkWrap: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFE3F2FD),
+                Colors.white,
+              ],
+              stops: [0.0, 0.6],
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildAnalyticsItem('Total Vehicles', vehicles.length.toString()),
-              _buildAnalyticsItem('Active Rentals', '24'),
-              _buildAnalyticsItem('Registered Users', '1,234'),
-              _buildAnalyticsItem('Monthly Revenue', '\$12,345'),
-              _buildAnalyticsItem('Maintenance Issues', '3'),
-              _buildAnalyticsItem('Pending Approvals', '5'),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  'Platform Analytics',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: themeMain,
+                  ),
+                ),
+              ),
+              ..._buildAnalyticsItems(),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                    color: themeMain,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
       ),
     );
   }
 
+  List<Widget> _buildAnalyticsItems() {
+    return [
+      _buildAnalyticsItem('Total Vehicles', vehicles.length.toString()),
+      _buildAnalyticsItem('Active Rentals', '24'),
+      _buildAnalyticsItem('Registered Users', '1,234'),
+      _buildAnalyticsItem('Monthly Revenue', '\$12,345'),
+      _buildAnalyticsItem('Maintenance Issues', '3'),
+      _buildAnalyticsItem('Pending Approvals', '5'),
+    ];
+  }
+
   Widget _buildAnalyticsItem(String title, String value) {
-    return ListTile(
-      title: Text(title),
-      trailing: Text(
-        value,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: themeMain,
-          fontSize: 16,
-
-
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[700],
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: themeMain,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/personal_island.dart';
 import '../widgets/app_settings_dialog.dart';
+import '../widgets/loading_screen.dart'; // Add this import
 
 class ProfileScreen extends StatefulWidget {
   final String fullName;
@@ -37,6 +38,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late bool _currentKeepScreenOn;
   late bool _currentUseLargeTexts;
+  bool _isSigningOut = false; // Add loading state for sign out
 
   @override
   void initState() {
@@ -66,8 +68,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     widget.onUseLargeTextsChanged(value);
   }
 
+  // Handle sign out with loading state
+  Future<void> _handleSignOut() async {
+    setState(() {
+      _isSigningOut = true;
+    });
+
+    // Add a small delay to show the loading screen
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Call the actual sign out function
+    widget.onSignOut();
+
+    // Reset loading state (though this might not be reached if navigation occurs)
+    if (mounted) {
+      setState(() {
+        _isSigningOut = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Show loading screen when signing out
+    if (_isSigningOut) {
+      return LoadingScreen(size: 80.0, color: widget.themeMain);
+    }
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -123,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildProfileItem(
                       icon: Icons.logout,
                       title: 'Sign Out',
-                      onTap: widget.onSignOut,
+                      onTap: _handleSignOut, // Use the new handler
                       isDestructive: true,
                     ),
                     const SizedBox(height: 16),
@@ -228,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _updateUseLargeTexts(value);
               setStateDialog(() {});
             },
-            onSignOutTap: widget.onSignOut,
+            onSignOutTap: _handleSignOut, // Also update the dialog sign out
           );
         },
       ),
