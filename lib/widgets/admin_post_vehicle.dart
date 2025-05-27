@@ -86,94 +86,107 @@ class _AdminPostScreenState extends State<AdminPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top,
-                  ),
-                  child: Text(
-                    "Post New Vehicle",
-                    style: TextStyle(
-                      fontSize: widget.headlineFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: widget.themeMain,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFBBDEFB),  // Light blue
+              Colors.white,
+            ],
+            stops: [0.0, 0.6],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                _buildSectionTitle('Vehicle Details'),
-                _buildVehicleTypeDropdown(),
-                const SizedBox(height: 16),
-                _buildTextFormField(
-                  controller: _nameController,
-                  label: 'Vehicle Name',
-                  validator: (value) => value!.isEmpty ? 'Required field' : null,
-                ),
-                const SizedBox(height: 16),
-                _buildTextFormField(
-                  controller: _descController,
-                  label: 'Description',
-                  lineCount: 3,
-                  validator: (value) => value!.isEmpty ? 'Required field' : null,
-                ),
-                const SizedBox(height: 24),
-                _buildSectionTitle('Pricing & Availability'),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: _buildTextFormField(
-                        controller: _priceController,
-                        label: 'Price per hour',
-                        keyboardType: TextInputType.number,
-                        prefix: const Text('\$ '),
-                        validator: (value) {
-                          if (value!.isEmpty) return 'Required field';
-                          if (double.tryParse(value) == null) return 'Invalid number';
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      flex: 3,
-                      child: _buildTextFormField(
-                        controller: _availabilityController,
-                        label: 'Available From',
-                        readOnly: true,
-                        onTap: () => _selectDateAndTime(context),
-                        validator: (value) => value!.isEmpty ? 'Required field' : null,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: _isSubmitting ? null : _submitForm,
-                    icon: _isSubmitting
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Icon(Icons.check_circle_outline),
-                    label: Text(_isSubmitting ? 'Posting...' : 'Submit Vehicle'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: widget.themeMain,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    child: Text(
+                      "Post New Vehicle",
+                      style: TextStyle(
+                        fontSize: widget.headlineFontSize,
+                        fontWeight: FontWeight.bold,
+                        color: widget.themeMain,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  _buildSectionTitle('Vehicle Details'),
+                  _buildVehicleTypeDropdown(),
+                  const SizedBox(height: 16),
+                  _buildTextFormField(
+                    controller: _nameController,
+                    label: 'Vehicle Name',
+                    validator: (value) => value!.isEmpty ? 'Required field' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextFormField(
+                    controller: _descController,
+                    label: 'Description',
+                    lineCount: 3,
+                    validator: (value) => value!.isEmpty ? 'Required field' : null,
+                  ),
+                  const SizedBox(height: 24),
+                  _buildSectionTitle('Pricing & Availability'),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: _buildTextFormField(
+                          controller: _priceController,
+                          label: 'Price per hour',
+                          keyboardType: TextInputType.number,
+                          prefix: const Text('\$ '),
+                          validator: (value) {
+                            if (value!.isEmpty) return 'Required field';
+                            if (double.tryParse(value) == null) return 'Invalid number';
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 3,
+                        child: _buildTextFormField(
+                          controller: _availabilityController,
+                          label: 'Available From',
+                          readOnly: true,
+                          onTap: () => _selectDateAndTime(context),
+                          validator: (value) => value!.isEmpty ? 'Required field' : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _isSubmitting ? null : _submitForm,
+                      icon: _isSubmitting
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Icon(Icons.check_circle_outline),
+                      label: Text(_isSubmitting ? 'Posting...' : 'Submit Vehicle'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.themeMain,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -212,6 +225,8 @@ class _AdminPostScreenState extends State<AdminPostScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        filled: true,
+        fillColor: Colors.white,
         prefix: prefix,
         suffixIcon: readOnly ? const Icon(Icons.calendar_today) : null,
       ),
@@ -230,6 +245,8 @@ class _AdminPostScreenState extends State<AdminPostScreen> {
         labelText: 'Vehicle Type',
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10)),
+        filled: true,
+        fillColor: Colors.white,
       ),
       items: _vehicleTypes.map((type) {
         return DropdownMenuItem(
