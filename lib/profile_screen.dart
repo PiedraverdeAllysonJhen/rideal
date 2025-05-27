@@ -69,46 +69,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            PersonalIsland(
-              netImgSm: _buildProfileImage(radius: 30),
-              apiName: widget.fullName,
-              themeLite: widget.themeLite,
-              headLine3: 20,
-              isSignedIn: true,
-              onAppSettingsTap: () => _showAppSettingsDialog(context),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildProfileItem(
-                    icon: Icons.person,
-                    title: 'Account Information',
-                    onTap: () => _showAccountInfo(context),
-                  ),
-                  _buildProfileItem(
-                    icon: Icons.settings,
-                    title: 'App Settings',
-                    onTap: () => _showAppSettingsDialog(context),
-                  ),
-                  _buildProfileItem(
-                    icon: Icons.help,
-                    title: 'Help & Support',
-                    onTap: () => _showHelpSupport(context),
-                  ),
-                  _buildProfileItem(
-                    icon: Icons.logout,
-                    title: 'Sign Out',
-                    onTap: widget.onSignOut,
-                    isDestructive: true,
-                  ),
-                ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFBBDEFB),  // Light blue
+              Colors.white,
+            ],
+            stops: [0.0, 0.6],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Profile Header with Personal Island
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                child: PersonalIsland(
+                  netImgSm: _buildProfileImage(radius: 36),
+                  apiName: widget.fullName,
+                  themeLite: widget.themeLite,
+                  headLine3: 24,
+                  isSignedIn: true,
+                  onAppSettingsTap: () => _showAppSettingsDialog(context),
+                  islandPadding: const EdgeInsets.all(16),
+                  namePadding: const EdgeInsets.only(left: 16),
+                ),
               ),
-            ),
-          ],
+
+              // Menu Items List
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    const SizedBox(height: 16),
+                    _buildProfileItem(
+                      icon: Icons.person_outline,
+                      title: 'Account Information',
+                      onTap: () => _showAccountInfo(context),
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.settings_outlined,
+                      title: 'App Settings',
+                      onTap: () => _showAppSettingsDialog(context),
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.help_outline,
+                      title: 'Help & Support',
+                      onTap: () => _showHelpSupport(context),
+                    ),
+                    _buildProfileItem(
+                      icon: Icons.logout,
+                      title: 'Sign Out',
+                      onTap: widget.onSignOut,
+                      isDestructive: true,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -120,13 +143,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required VoidCallback onTap,
     bool isDestructive = false,
   }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: ListTile(
-        leading: Icon(icon, color: isDestructive ? Colors.red : widget.themeMain),
-        title: Text(title,
-            style: TextStyle(color: isDestructive ? Colors.red : Colors.black87)),
-        trailing: const Icon(Icons.chevron_right),
+        leading: Icon(
+          icon,
+          color: isDestructive ? Colors.red : widget.themeMain,
+          size: 28,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: isDestructive ? Colors.red : Colors.black87,
+          ),
+        ),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: isDestructive ? Colors.red : widget.themeGrey,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
         onTap: onTap,
       ),
     );
@@ -142,6 +193,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Image.network(
           widget.photoUrl,
           fit: BoxFit.cover,
+          width: radius * 2,
+          height: radius * 2,
           errorBuilder: (context, error, stackTrace) {
             return Icon(Icons.error, color: widget.themeMain);
           },
@@ -186,7 +239,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Account Information'),
+        title: Text(
+          'Account Information',
+          style: TextStyle(color: widget.themeMain),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,34 +250,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.check_box_outline_blank, size: 24),
-                const SizedBox(width: 12),
+                _buildProfileImage(radius: 24),
+                const SizedBox(width: 16),
                 Expanded(
-                  child: Text(
-                    widget.fullName,
-                    style: const TextStyle(fontSize: 16),
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.fullName,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.email,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: widget.themeGrey,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 36, top: 4),
-              child: Text(
-                widget.email,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: widget.themeGrey,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(
+              'Close',
+              style: TextStyle(color: widget.themeMain),
+            ),
           ),
         ],
       ),
@@ -232,12 +295,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Help & Support'),
-        content: const Text('Contact our support team at:\ncherryblitz.dev0@gmail.com'),
+        title: Text(
+          'Help & Support',
+          style: TextStyle(color: widget.themeMain),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Need assistance? Contact our support team:'),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Icon(Icons.email, color: widget.themeMain, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  'cherryblitz.dev0@gmail.com',
+                  style: TextStyle(
+                    color: widget.themeMain,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(
+              'Close',
+              style: TextStyle(color: widget.themeMain),
+            ),
           ),
         ],
       ),

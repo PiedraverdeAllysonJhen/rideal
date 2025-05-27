@@ -45,8 +45,6 @@ class VehicleService {
         imageUrl: 'https://www.imbikemag.com/wp-content/uploads/2021/12/P1054613.jpg',
         category: 'Bikes',
         ),
-
-
     ];
   }
 }

@@ -15,7 +15,7 @@ class PersonalIsland extends StatelessWidget {
   required this.themeLite,
   required this.headLine3,
   required this.isSignedIn,
-  this.onAppSettingsTap,
+  this.onAppSettingsTap, required EdgeInsets islandPadding, required EdgeInsets namePadding,
   });
 
   static const double _islandTopPadding = 64.0;
