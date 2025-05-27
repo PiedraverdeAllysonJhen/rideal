@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/vehicle.dart';
 
-class VehicleCardWidget extends StatelessWidget {
+class VehicleCardWidget extends StatefulWidget {
   final Vehicle vehicle;
   final bool isFeatured;
   final Color themeMain;
@@ -12,6 +12,21 @@ class VehicleCardWidget extends StatelessWidget {
     this.isFeatured = false,
     required this.themeMain,
   });
+
+  @override
+  State<VehicleCardWidget> createState() => _VehicleCardWidgetState();
+}
+
+class _VehicleCardWidgetState extends State<VehicleCardWidget> {
+  bool isBookmarked = false;
+
+  void toggleBookmark() {
+    setState(() {
+      isBookmarked = !isBookmarked;
+    });
+
+    // Optional: Call a method to store bookmark state, e.g., via a service
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,22 +45,21 @@ class VehicleCardWidget extends StatelessWidget {
                     top: Radius.circular(15.0),
                   ),
                   child: Image.network(
-                    vehicle.imageUrl,
+                    widget.vehicle.imageUrl,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),
-                if (isFeatured)
+
+                // Featured Label
+                if (widget.isFeatured)
                   Positioned(
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: themeMain,
+                        color: widget.themeMain,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
@@ -58,6 +72,27 @@ class VehicleCardWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                // Bookmark Icon (Star)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: GestureDetector(
+                    onTap: toggleBookmark,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.4),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isBookmarked ? Icons.star : Icons.star_border,
+                        color: Colors.yellowAccent,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -67,7 +102,7 @@ class VehicleCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  vehicle.name,
+                  widget.vehicle.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -77,13 +112,13 @@ class VehicleCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(Icons.star, color: Colors.amber, size: 16),
-                    Text(' ${vehicle.rating} (${vehicle.reviews})'),
+                    Text(' ${widget.vehicle.rating} (${widget.vehicle.reviews})'),
                     const Spacer(),
                     Text(
-                      '\$${vehicle.price}/day',
+                      '₱${widget.vehicle.price}/day',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: themeMain,
+                        color: widget.themeMain,
                       ),
                     ),
                   ],
@@ -93,7 +128,7 @@ class VehicleCardWidget extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: themeMain,
+                      backgroundColor: widget.themeMain,
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () {},
