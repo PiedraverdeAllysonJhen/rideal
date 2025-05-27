@@ -14,32 +14,37 @@ class FeaturedVehiclesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'Featured Vehicles',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 0), // Add bottom spacing
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: Text(
+              'Featured Vehicles',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        SizedBox(
-          height: 240,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: vehicles.length,
-            itemBuilder: (context, index) => SizedBox(
-              width: 280,
-              child: VehicleCardWidget(
-                vehicle: vehicles[index],
-                themeMain: themeMain,
-                isFeatured: true,
+          SizedBox(
+            height: 225,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+              itemCount: vehicles.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 4),
+              itemBuilder: (context, index) => SizedBox(
+                width: 230,
+                child: VehicleCardWidget(
+                  vehicle: vehicles[index],
+                  themeMain: themeMain,
+                  isFeatured: true,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

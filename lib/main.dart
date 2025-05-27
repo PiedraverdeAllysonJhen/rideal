@@ -15,6 +15,8 @@ import 'models/vehicle.dart';
 import 'services/vehicle_service.dart';
 import 'profile_screen.dart';
 import 'home_admin.dart';
+import 'vehicle_screen.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -154,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         return const Center(child: Text('Bookings Screen'));
       case 2:
-        return const Center(child: Text('Vehicles Screen'));
+        return VehicleScreen(vehicles: _vehicles, themeMain: _themeMain);
       case 3:
         return const Center(child: Text('Notifications Screen'));
       case 4:

@@ -26,14 +26,29 @@ class HomeClientScreen extends StatelessWidget {
         backgroundColor: themeMain,
         foregroundColor: Colors.white,
       ),
-      body: ListView(
-        children: [
-          const SearchBarWidget(),
-          const PromoSliderWidget(),
-          VehicleCategoriesWidget(themeMain: themeMain),
-          FeaturedVehiclesWidget(vehicles: vehicles, themeMain: themeMain),
-          VehicleListingWidget(vehicles: vehicles, themeMain: themeMain),
-        ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFBBDEFB),
+              Colors.white,    // Light blue
+            ],
+            stops: [0.0, 0.8],
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 20),  // Adjusted bottom padding
+          children: [
+            const SearchBarWidget(),
+            const PromoSliderWidget(),
+            VehicleCategoriesWidget(themeMain: themeMain),
+            const SizedBox(height: 12),
+            FeaturedVehiclesWidget(vehicles: vehicles, themeMain: themeMain),
+            VehicleListingWidget(vehicles: vehicles, themeMain: themeMain),
+          ],
+        ),
       ),
     );
   }

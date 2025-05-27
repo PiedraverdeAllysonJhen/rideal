@@ -18,26 +18,26 @@ class VehicleCardWidget extends StatefulWidget {
 }
 
 class _VehicleCardWidgetState extends State<VehicleCardWidget> {
-  bool isBookmarked = false;
-
   void toggleBookmark() {
     setState(() {
-      isBookmarked = !isBookmarked;
+      widget.vehicle.isBookmarked = !widget.vehicle.isBookmarked;
     });
-
-    // Optional: Call a method to store bookmark state, e.g., via a service
   }
 
   @override
   Widget build(BuildContext context) {
+    final double imageHeight = widget.isFeatured ? 100 : 120;
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
+      elevation: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
+          SizedBox(
+            height: imageHeight,
             child: Stack(
               children: [
                 ClipRRect(
@@ -50,8 +50,6 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                     fit: BoxFit.cover,
                   ),
                 ),
-
-                // Featured Label
                 if (widget.isFeatured)
                   Positioned(
                     top: 8,
@@ -72,8 +70,6 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                       ),
                     ),
                   ),
-
-                // Bookmark Icon (Star)
                 Positioned(
                   top: 8,
                   right: 8,
@@ -86,7 +82,7 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        isBookmarked ? Icons.star : Icons.star_border,
+                        widget.vehicle.isBookmarked ? Icons.star : Icons.star_border,
                         color: Colors.yellowAccent,
                         size: 20,
                       ),
@@ -105,31 +101,39 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                   widget.vehicle.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.star, color: Colors.amber, size: 16),
-                    Text(' ${widget.vehicle.rating} (${widget.vehicle.reviews})'),
+                    Text(
+                      ' ${widget.vehicle.rating} (${widget.vehicle.reviews})',
+                      style: const TextStyle(fontSize: 13),
+                    ),
                     const Spacer(),
                     Text(
                       '₱${widget.vehicle.price}/day',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 13.5,
                         color: widget.themeMain,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: widget.themeMain,
                       foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: () {},
                     child: const Text('Rent Now'),

@@ -7,6 +7,7 @@ class Vehicle {
   final double distance;
   final String imageUrl;
   final String category;
+  bool isBookmarked; // Add this
 
   Vehicle({
     required this.id,
@@ -17,5 +18,6 @@ class Vehicle {
     required this.distance,
     required this.imageUrl,
     required this.category,
+    this.isBookmarked = false,
   });
 }

@@ -46,31 +46,39 @@ class _VehicleListingWidgetState extends State<VehicleListingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildSortHeader(),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.75,
-            mainAxisSpacing: 8.0,
-            crossAxisSpacing: 8.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4), // Modified
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSortHeader(),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40),
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.70,
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+              ),
+              itemCount: _sortedVehicles.length,
+              itemBuilder: (context, index) => VehicleCardWidget(
+                vehicle: _sortedVehicles[index],
+                themeMain: widget.themeMain,
+              ),
+            ),
           ),
-          itemCount: _sortedVehicles.length,
-          itemBuilder: (context, index) => VehicleCardWidget(
-            vehicle: _sortedVehicles[index],
-            themeMain: widget.themeMain,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildSortHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -80,6 +88,7 @@ class _VehicleListingWidgetState extends State<VehicleListingWidget> {
           ),
           DropdownButton<String>(
             value: _sortBy,
+            underline: const SizedBox(),
             items: const [
               DropdownMenuItem(value: 'price', child: Text('Price')),
               DropdownMenuItem(value: 'rating', child: Text('Rating')),
