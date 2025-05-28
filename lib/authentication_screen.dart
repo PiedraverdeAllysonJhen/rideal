@@ -24,13 +24,10 @@ class AuthenticationScreen extends StatefulWidget {
 class AuthenticationScreenState extends State<AuthenticationScreen> {
   final uuid = const Uuid();
   final globalDelay = 500;
-  final _themeBG = const Color(0xFFF4F6F8);
   final _themeMain = const Color(0xFF1976D2);
-  final _themeLite = const Color(0xFFBBDEFB);
   final _themeGrey = const Color(0xFF424242);
   final _bhServer = 'https://cherryblitz-api.vercel.app';
 
-  late final double _extraLarge = 36.0;
   late final double _body = 16.0;
 
   int lastLoginClicked = 0;
@@ -53,14 +50,11 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
 
     try {
       final uri = Uri.parse(url);
-
-      // Check if we can launch the URL
       if (await canLaunchUrl(uri)) {
         final launched = await launchUrl(
           uri,
           mode: LaunchMode.externalApplication,
         );
-
         if (!launched) {
           _showToast("Could not open privacy policy");
         }
@@ -68,10 +62,8 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
         _showToast("No browser available to open privacy policy");
       }
     } on PlatformException catch (e) {
-      print('Platform Exception: ${e.message}');
       _showToast("Error opening privacy policy: ${e.message ?? 'Unknown error'}");
     } catch (e) {
-      print('General Exception: $e');
       _showToast("Unable to open privacy policy");
     }
   }
@@ -99,14 +91,12 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
       photoUrl = data['photoUrl'] as String? ?? apiPhotoUrl;
 
       if (photoUrl.isEmpty) photoUrl = apiPhotoUrl;
-      if (accessToken.isNotEmpty) username = tempUsername;
       if (accessToken.isEmpty) {
         _showToast("Incorrect username or password.");
         setState(() {
           _isLoading = false;
           _retries++;
         });
-
         if (_retries >= 3) {
           _showToast("Too many attempts, please try again later.");
           setState(() => _isPaused = true);
@@ -142,15 +132,12 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
     );
 
     await DatabaseService().insertAccount(account);
-
     _showToast("Welcome back $username!");
-
     isSignedIn = true;
     setState(() {
       _retries = 0;
       _isLoading = false;
     });
-
     widget.onSignedIn?.call();
   }
 
@@ -164,6 +151,80 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading
+        ? LoadingScreen(size: 80.0, color: _themeMain)
+        : Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1884E1),  // Light blue
+              Color(0xFFB0E0FF),  // Light blue
+
+            ],
+            stops: [0.15, 0.6],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset('assets/images/ride-hailing.png', height: 80),
+                const SizedBox(height: 16),
+                const Text(
+                  'Rideal',
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'CherrySwash',
+                    color: Colors.white,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      )
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Sign In to Continue',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: _themeGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      _buildSignInFields(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSignInFields() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -174,15 +235,20 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
             labelText: 'Username',
             labelStyle: TextStyle(fontSize: _body, color: _themeGrey),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Colors.grey.shade50,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: _themeMain, width: 2),
             ),
             prefixIcon: Icon(Icons.person, color: _themeMain),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         TextField(
           controller: _passwordController,
           obscureText: true,
@@ -190,39 +256,71 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
             labelText: 'Password',
             labelStyle: TextStyle(fontSize: _body, color: _themeGrey),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Colors.grey.shade50,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: _themeMain, width: 2),
             ),
             prefixIcon: Icon(Icons.lock, color: _themeMain),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
         SizedBox(
           width: double.infinity,
           height: 48,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _themeMain,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF1565C0),
+                  Color(0xFF1976D2),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: _themeMain.withOpacity(0.3),
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
+                )
+              ],
+            ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: _retries >= 3
+                  ? null
+                  : () async {
+                final username = _usernameController.text.trim();
+                final password = _passwordController.text.trim();
+                await authorizeEmail(username, password);
+                _usernameController.clear();
+                _passwordController.clear();
+              },
+              child: const Text(
+                'Sign In',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
-            onPressed: _retries >= 3
-                ? null
-                : () async {
-              final username = _usernameController.text.trim();
-              final password = _passwordController.text.trim();
-              await authorizeEmail(username, password);
-              _usernameController.clear();
-              _passwordController.clear();
-            },
-            child: const Text('Sign In', style: TextStyle(fontSize: 16)),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         GestureDetector(
           onTap: _launchPrivacyPolicy,
           child: Text(
@@ -230,43 +328,12 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
             style: TextStyle(
               fontSize: 14,
               color: _themeMain,
+              fontWeight: FontWeight.w500,
               decoration: TextDecoration.underline,
             ),
           ),
         ),
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _isLoading
-        ? LoadingScreen(size: 80.0, color: _themeMain)
-        : Scaffold(
-      backgroundColor: _themeBG,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset('assets/images/ride-hailing.png', height: 80),
-              const SizedBox(height: 12),
-              Text(
-                'Rideal',
-                style: TextStyle(
-                  fontSize: _extraLarge,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'CherrySwash',
-                  color: _themeMain,
-                ),
-              ),
-              const SizedBox(height: 32),
-              if (!_isPaused) _buildSignInFields(),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
