@@ -81,9 +81,21 @@ class _BookingScreenState extends State<BookingScreen> {
         backgroundColor: widget.themeMain,
         foregroundColor: Colors.white,
       ),
-      body: widget.selectedVehicle == null
-          ? _buildEmptyState()
-          : _buildBookingStepper(),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFBBDEFB), // Light blue
+              Colors.white,
+            ],
+          ),
+        ),
+        child: widget.selectedVehicle == null
+            ? _buildEmptyState()
+            : _buildBookingStepper(),
+      ),
     );
   }
 
