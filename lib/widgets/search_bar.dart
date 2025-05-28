@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({super.key});
+  final ValueChanged<String>? onSubmitted;
+
+  const SearchBarWidget({
+    super.key,
+    this.onSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +24,7 @@ class SearchBarWidget extends StatelessWidget {
             onPressed: () {},
           ),
         ),
+        onSubmitted: onSubmitted,
       ),
     );
   }
