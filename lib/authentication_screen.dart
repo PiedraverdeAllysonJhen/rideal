@@ -26,7 +26,7 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
   final globalDelay = 500;
   final _themeMain = const Color(0xFF1976D2);
   final _themeGrey = const Color(0xFF424242);
-  final _bhServer = 'https://cherryblitz-api.vercel.app';
+  final _bhServer = 'https://bleedingheart-api.vercel.app';
 
   late final double _body = 16.0;
 
