@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/vehicle.dart';
+import '../services/notification_service.dart';
 
 class BookingScreen extends StatefulWidget {
   final Vehicle? selectedVehicle;
   final Color themeMain;
   final VoidCallback? onBookingComplete;
+  final RidealNotificationService? notificationService;
 
   const BookingScreen({
     super.key,
     this.selectedVehicle,
     required this.themeMain,
     this.onBookingComplete,
+    this.notificationService,
   });
 
   @override
@@ -53,6 +56,21 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   void _completeBooking() {
+    if (widget.notificationService != null && widget.selectedVehicle != null) {
+      final startDateStr = _startDate != null
+          ? DateFormat('MMM dd, yyyy').format(_startDate!)
+          : '';
+      final endDateStr = _endDate != null
+          ? DateFormat('MMM dd, yyyy').format(_endDate!)
+          : '';
+
+      widget.notificationService!.addNotification(
+        title: 'Payment Successful! 🎉',
+        message: 'Your booking for ${widget.selectedVehicle!.name} from $startDateStr to $endDateStr has been confirmed. Total: ₱$_totalPrice',
+        type: NotificationType.success,
+      );
+    }
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -87,7 +105,7 @@ class _BookingScreenState extends State<BookingScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFBBDEFB), // Light blue
+              Color(0xFFBBDEFB),
               Colors.white,
             ],
           ),

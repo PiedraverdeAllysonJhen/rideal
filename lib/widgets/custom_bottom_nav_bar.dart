@@ -9,6 +9,7 @@ class CustomBottomNavBar extends StatelessWidget {
   final bool isFullyLoaded;
   final bool isAdminMode;
   final ValueChanged<int>? onItemSelected;
+  final int notificationCount; // Add notification count parameter
 
   const CustomBottomNavBar({
     super.key,
@@ -20,6 +21,7 @@ class CustomBottomNavBar extends StatelessWidget {
     required this.isFullyLoaded,
     required this.isAdminMode,
     this.onItemSelected,
+    this.notificationCount = 0, // Default to 0
   });
 
   Widget _buildNavItem({
@@ -27,7 +29,48 @@ class CustomBottomNavBar extends StatelessWidget {
     required IconData icon,
     required String label,
     required bool isSelected,
+    int badgeCount = 0, // Add badge count parameter
   }) {
+    Widget iconWidget = Icon(
+      icon,
+      size: 24,
+      color: isSelected ? themeDark : Colors.grey,
+    );
+
+    // Add badge if count is provided and > 0
+    if (badgeCount > 0 && index == 3) {
+      iconWidget = Stack(
+        clipBehavior: Clip.none,
+        children: [
+          iconWidget,
+          Positioned(
+            top: -5,
+            right: -5,
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(
+                minWidth: 16,
+                minHeight: 16,
+              ),
+              child: Text(
+                badgeCount.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Expanded(
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
@@ -36,11 +79,7 @@ class CustomBottomNavBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 24,
-              color: isSelected ? themeDark : Colors.grey,
-            ),
+            iconWidget,
             const SizedBox(height: 2),
             Text(
               label,
@@ -94,6 +133,7 @@ class CustomBottomNavBar extends StatelessWidget {
             icon: Icons.notifications_none,
             label: "Notifications",
             isSelected: navItem == 3,
+            badgeCount: notificationCount, // Pass notification count here
           ),
           _buildNavItem(
             index: 4,

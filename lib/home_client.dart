@@ -7,12 +7,14 @@ import 'widgets/featured_vehicles.dart';
 import 'widgets/vehicle_listing.dart';
 import 'models/vehicle.dart';
 import 'booking_screen.dart';
+import '../services/notification_service.dart';
 
 class HomeClientScreen extends StatelessWidget {
   final List<Vehicle> vehicles;
   final Color themeMain;
   final Color themeLite;
   final Function(Vehicle)? onRentNow;
+  final RidealNotificationService? notificationService;
 
   const HomeClientScreen({
     super.key,
@@ -20,6 +22,7 @@ class HomeClientScreen extends StatelessWidget {
     this.onRentNow,
     this.themeMain = const Color(0xFF1976D2),
     this.themeLite = const Color(0xFFBBDEFB),
+    this.notificationService,
   });
 
   void _handleSearchSubmitted(String query, BuildContext context) {
@@ -75,7 +78,18 @@ class HomeClientScreen extends StatelessWidget {
             VehicleListingWidget(
               vehicles: vehicles,
               themeMain: themeMain,
-              onRentNow: onRentNow,
+              onRentNow: (vehicle) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookingScreen(
+                      selectedVehicle: vehicle,
+                      themeMain: themeMain,
+                      notificationService: notificationService,
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

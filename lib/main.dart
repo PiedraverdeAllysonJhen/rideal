@@ -6,7 +6,7 @@ import 'notification_screen.dart';
 import 'widgets/loading_screen.dart';
 import 'widgets/personal_island.dart';
 import 'widgets/app_settings_dialog.dart';
-import 'widgets/custom_bottom_nav_bar.dart';
+import 'widgets/custom_bottom_nav_bar.dart'; // Updated
 import 'authentication_screen.dart';
 import 'widgets/admin_post_vehicle.dart';
 import 'services/database.dart';
@@ -14,10 +14,11 @@ import 'models/account.dart';
 import 'home_client.dart';
 import 'models/vehicle.dart';
 import 'services/vehicle_service.dart';
+import '../services/notification_service.dart';
 import 'profile_screen.dart';
 import 'home_admin.dart';
 import 'vehicle_screen.dart';
-import 'booking_screen.dart';  // Add this import
+import 'booking_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -51,8 +52,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final uuid = const Uuid();
   List<Vehicle> _vehicles = [];
-  Vehicle? _selectedVehicle;  // Track selected vehicle for booking
-  final NotificationService _notificationService = NotificationService();
+  Vehicle? _selectedVehicle;
+  final RidealNotificationService _notificationService = RidealNotificationService();
 
   static const Color _themeBG = Color(0xFFF4F6F8);
   static const Color _themeMain = Color(0xFF1976D2);
@@ -89,7 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _initializeSettings();
     _initializeRequirements();
-    // Listen to notification changes for UI updates
     _notificationService.addListener(_onNotificationChanged);
   }
 
@@ -100,7 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onNotificationChanged() {
-    // Update UI when notifications change (for badge counts, etc.)
     if (mounted) setState(() {});
   }
 
@@ -170,19 +169,26 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return HomeClientScreen(
           vehicles: _vehicles,
-          onRentNow: _handleRentNow,  // Add rent now handler
+          onRentNow: _handleRentNow,
+          themeMain: _themeMain,
+          themeLite: _themeLite,
+          notificationService: _notificationService,
         );
       case 1:
         return BookingScreen(
           selectedVehicle: _selectedVehicle,
           themeMain: _themeMain,
           onBookingComplete: _handleBookingComplete,
-
+          notificationService: _notificationService,
         );
       case 2:
-        return VehicleScreen(vehicles: _vehicles, themeMain: _themeMain, onRentNow: _handleRentNow,);
+        return VehicleScreen(
+          vehicles: _vehicles,
+          themeMain: _themeMain,
+          onRentNow: _handleRentNow,
+        );
       case 3:
-        return NotificationScreen(  // Update notifications screen
+        return NotificationScreen(
           themeMain: _themeMain,
           themeLite: _themeLite,
           themeGrey: _themeGrey,
@@ -202,14 +208,19 @@ class _MyHomePageState extends State<MyHomePage> {
           useLargeTexts: _useLargeTexts,
         );
       default:
-        return HomeClientScreen(vehicles: _vehicles);
+        return HomeClientScreen(
+          vehicles: _vehicles,
+          onRentNow: _handleRentNow,
+          themeMain: _themeMain,
+          themeLite: _themeLite,
+        );
     }
   }
 
   void _handleRentNow(Vehicle vehicle) {
     setState(() {
       _selectedVehicle = vehicle;
-      _selectedIndex = 1;  // Switch to bookings tab
+      _selectedIndex = 1;
     });
     _buildHomePage();
   }
@@ -217,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _handleBookingComplete() {
     setState(() {
       _selectedVehicle = null;
-      _selectedIndex = 0;  // Return to home after booking
+      _selectedIndex = 0;
     });
     _buildHomePage();
   }
@@ -383,6 +394,7 @@ class _MyHomePageState extends State<MyHomePage> {
         isSignedIn: _isSignedIn,
         isFullyLoaded: !_isLoading,
         onItemSelected: _handleNavItemSelected,
+        notificationCount: _notificationService.notifications.length, // Add this
       )
           : null,
     );
