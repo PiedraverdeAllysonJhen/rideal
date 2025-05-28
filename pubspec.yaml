@@ -15,6 +15,7 @@ dependencies:
   intl: ^0.18.1
   cupertino_icons: ^1.0.8
 
+
   # URL launcher - updated for fix
   url_launcher: ^6.2.5
   url_launcher_android: ^6.3.0

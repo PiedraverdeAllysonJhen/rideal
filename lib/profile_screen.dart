@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import '../widgets/personal_island.dart';
 import '../widgets/app_settings_dialog.dart';
-import '../widgets/loading_screen.dart'; // Add this import
+import '../widgets/loading_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String fullName;
@@ -38,7 +39,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late bool _currentKeepScreenOn;
   late bool _currentUseLargeTexts;
-  bool _isSigningOut = false; // Add loading state for sign out
+  bool _isSigningOut = false;
 
   @override
   void initState() {
@@ -51,46 +52,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void didUpdateWidget(covariant ProfileScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.keepScreenOn != oldWidget.keepScreenOn) {
-      _currentKeepScreenOn = widget.keepScreenOn;
+      setState(() {
+        _currentKeepScreenOn = widget.keepScreenOn;
+      });
     }
     if (widget.useLargeTexts != oldWidget.useLargeTexts) {
-      _currentUseLargeTexts = widget.useLargeTexts;
-    }
-  }
-
-  void _updateKeepScreenOn(bool value) {
-    setState(() => _currentKeepScreenOn = value);
-    widget.onKeepScreenOnChanged(value);
-  }
-
-  void _updateUseLargeTexts(bool value) {
-    setState(() => _currentUseLargeTexts = value);
-    widget.onUseLargeTextsChanged(value);
-  }
-
-  // Handle sign out with loading state
-  Future<void> _handleSignOut() async {
-    setState(() {
-      _isSigningOut = true;
-    });
-
-    // Add a small delay to show the loading screen
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    // Call the actual sign out function
-    widget.onSignOut();
-
-    // Reset loading state (though this might not be reached if navigation occurs)
-    if (mounted) {
       setState(() {
-        _isSigningOut = false;
+        _currentUseLargeTexts = widget.useLargeTexts;
       });
     }
   }
 
+  void _updateKeepScreenOn(bool value) async {
+    setState(() {
+      _currentKeepScreenOn = value;
+    });
+
+    // Proper implementation using wakelock_plus
+    try {
+      if (value) {
+        await WakelockPlus.enable();
+        print('Keep screen on: ENABLED - Screen will stay awake');
+      } else {
+        await WakelockPlus.disable();
+        print('Keep screen on: DISABLED - Screen can sleep normally');
+      }
+    } catch (e) {
+      print('Error setting wakelock: $e');
+    }
+
+    widget.onKeepScreenOnChanged(value);
+  }
+
+  void _updateUseLargeTexts(bool value) {
+    setState(() {
+      _currentUseLargeTexts = value;
+    });
+
+    print('Large texts: ${value ? "ENABLED" : "DISABLED"}');
+    // The large text functionality should be handled by the parent widget/app
+    widget.onUseLargeTextsChanged(value);
+  }
+
+  Future<void> _handleSignOut() async {
+    setState(() => _isSigningOut = true);
+    await Future.delayed(const Duration(milliseconds: 500));
+    widget.onSignOut();
+    if (mounted) setState(() => _isSigningOut = false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Show loading screen when signing out
     if (_isSigningOut) {
       return LoadingScreen(size: 80.0, color: widget.themeMain);
     }
@@ -99,19 +111,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
+            colors: [Color(0xFFBBDEFB), Colors.white],
+            stops: [0.0, 0.6],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFBBDEFB),  // Light blue
-              Colors.white,
-            ],
-            stops: [0.0, 0.6],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Profile Header with Personal Island
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                 child: PersonalIsland(
@@ -125,8 +133,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   namePadding: const EdgeInsets.only(left: 16),
                 ),
               ),
-
-              // Menu Items List
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -150,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildProfileItem(
                       icon: Icons.logout,
                       title: 'Sign Out',
-                      onTap: _handleSignOut, // Use the new handler
+                      onTap: _handleSignOut,
                       isDestructive: true,
                     ),
                     const SizedBox(height: 16),
@@ -175,20 +181,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
       ),
       child: ListTile(
-        leading: Icon(
-          icon,
-          color: isDestructive ? Colors.red : widget.themeMain,
-          size: 28,
-        ),
+        leading: Icon(icon, color: isDestructive ? Colors.red : widget.themeMain, size: 28),
         title: Text(
           title,
           style: TextStyle(
@@ -197,14 +193,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: isDestructive ? Colors.red : Colors.black87,
           ),
         ),
-        trailing: Icon(
-          Icons.chevron_right,
-          color: isDestructive ? Colors.red : widget.themeGrey,
-        ),
+        trailing: Icon(Icons.chevron_right, color: isDestructive ? Colors.red : widget.themeGrey),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         onTap: onTap,
       ),
     );
@@ -222,9 +213,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           fit: BoxFit.cover,
           width: radius * 2,
           height: radius * 2,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(Icons.error, color: widget.themeMain);
-          },
+          errorBuilder: (context, error, stackTrace) =>
+              Icon(Icons.person, size: radius, color: widget.themeMain),
         ),
       ),
     );
@@ -236,7 +226,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setStateDialog) {
           return AppSettingsDialog(
-            netImgLg: _buildProfileImage(radius: 60),
+            // Fixed: Reduced profile image size from radius 60 to 40
+            netImgLg: _buildProfileImage(radius: 40),
             apiName: widget.fullName,
             apiEmail: widget.email,
             headLine2: 22,
@@ -245,17 +236,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             themeGrey: widget.themeGrey,
             themeMain: widget.themeMain,
             themeLite: widget.themeLite,
+            // Fixed: Use current state values instead of widget values
             keepScreenOn: _currentKeepScreenOn,
             useLargeTexts: _currentUseLargeTexts,
             onKeepScreenOnChanged: (value) {
+              // Fixed: Update both local state and parent state
               _updateKeepScreenOn(value);
-              setStateDialog(() {});
+              setStateDialog(() {}); // Update dialog UI immediately
             },
             onUseLargeTextsChanged: (value) {
+              // Fixed: Update both local state and parent state
               _updateUseLargeTexts(value);
-              setStateDialog(() {});
+              setStateDialog(() {}); // Update dialog UI immediately
             },
-            onSignOutTap: _handleSignOut, // Also update the dialog sign out
+            onSignOutTap: _handleSignOut,
           );
         },
       ),
@@ -266,10 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          'Account Information',
-          style: TextStyle(color: widget.themeMain),
-        ),
+        title: Text('Account Information', style: TextStyle(color: widget.themeMain)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,18 +276,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Text(
                         widget.fullName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.visible,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         widget.email,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: widget.themeGrey,
-                        ),
+                        style: TextStyle(fontSize: 14, color: widget.themeGrey),
                       ),
                     ],
                   ),
@@ -308,10 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: TextStyle(color: widget.themeMain),
-            ),
+            child: Text('Close', style: TextStyle(color: widget.themeMain)),
           ),
         ],
       ),
@@ -322,10 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          'Help & Support',
-          style: TextStyle(color: widget.themeMain),
-        ),
+        title: Text('Help & Support', style: TextStyle(color: widget.themeMain)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,10 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'cherryblitz.dev0@gmail.com',
-                  style: TextStyle(
-                    color: widget.themeMain,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(color: widget.themeMain, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -350,10 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: TextStyle(color: widget.themeMain),
-            ),
+            child: Text('Close', style: TextStyle(color: widget.themeMain)),
           ),
         ],
       ),
