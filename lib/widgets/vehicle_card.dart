@@ -1,3 +1,4 @@
+// vehicle_card.dart
 import 'package:flutter/material.dart';
 import '../models/vehicle.dart';
 
@@ -5,12 +6,14 @@ class VehicleCardWidget extends StatefulWidget {
   final Vehicle vehicle;
   final bool isFeatured;
   final Color themeMain;
+  final Function(Vehicle)? onRentNow;  // Properly define callback
 
   const VehicleCardWidget({
     super.key,
     required this.vehicle,
     this.isFeatured = false,
     required this.themeMain,
+    this.onRentNow,  // Add this parameter
   });
 
   @override
@@ -55,7 +58,8 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: widget.themeMain,
                         borderRadius: BorderRadius.circular(8),
@@ -82,7 +86,9 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        widget.vehicle.isBookmarked ? Icons.star : Icons.star_border,
+                        widget.vehicle.isBookmarked
+                            ? Icons.star
+                            : Icons.star_border,
                         color: Colors.yellowAccent,
                         size: 20,
                       ),
@@ -135,7 +141,11 @@ class _VehicleCardWidgetState extends State<VehicleCardWidget> {
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       textStyle: const TextStyle(fontSize: 14),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (widget.onRentNow != null) {
+                        widget.onRentNow!(widget.vehicle);
+                      }
+                    },
                     child: const Text('Rent Now'),
                   ),
                 ),

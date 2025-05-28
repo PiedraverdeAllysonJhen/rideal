@@ -5,17 +5,19 @@ import 'vehicle_card.dart';
 class FeaturedVehiclesWidget extends StatelessWidget {
   final List<Vehicle> vehicles;
   final Color themeMain;
+  final Function(Vehicle)? onRentNow;
 
   const FeaturedVehiclesWidget({
     super.key,
     required this.vehicles,
     required this.themeMain,
+    this.onRentNow,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 0), // Add bottom spacing
+      padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,6 +41,7 @@ class FeaturedVehiclesWidget extends StatelessWidget {
                   vehicle: vehicles[index],
                   themeMain: themeMain,
                   isFeatured: true,
+                  onRentNow: (vehicle) => onRentNow?.call(vehicle),
                 ),
               ),
             ),

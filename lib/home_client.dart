@@ -10,10 +10,12 @@ class HomeClientScreen extends StatelessWidget {
   final List<Vehicle> vehicles;
   final Color themeMain;
   final Color themeLite;
+  final Function(Vehicle)? onRentNow;
 
   const HomeClientScreen({
     super.key,
     required this.vehicles,
+    this.onRentNow,
     this.themeMain = const Color(0xFF1976D2),
     this.themeLite = const Color(0xFFBBDEFB),
   });
@@ -33,20 +35,24 @@ class HomeClientScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Color(0xFFBBDEFB),
-              Colors.white,    // Light blue
+              Colors.white,
             ],
             stops: [0.0, 0.8],
           ),
         ),
         child: ListView(
-          padding: const EdgeInsets.only(bottom: 20),  // Adjusted bottom padding
+          padding: const EdgeInsets.only(bottom: 20),
           children: [
             const SearchBarWidget(),
             const PromoSliderWidget(),
             VehicleCategoriesWidget(themeMain: themeMain),
             const SizedBox(height: 12),
-            FeaturedVehiclesWidget(vehicles: vehicles, themeMain: themeMain),
-            VehicleListingWidget(vehicles: vehicles, themeMain: themeMain),
+            FeaturedVehiclesWidget(vehicles: vehicles, themeMain: themeMain, onRentNow: onRentNow),
+            VehicleListingWidget(
+              vehicles: vehicles,
+              themeMain: themeMain,
+              onRentNow: onRentNow,
+            ),
           ],
         ),
       ),

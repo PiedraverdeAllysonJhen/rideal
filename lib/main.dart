@@ -16,7 +16,7 @@ import 'services/vehicle_service.dart';
 import 'profile_screen.dart';
 import 'home_admin.dart';
 import 'vehicle_screen.dart';
-
+import 'booking_screen.dart';  // Add this import
 
 void main() => runApp(const MyApp());
 
@@ -50,6 +50,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final uuid = const Uuid();
   List<Vehicle> _vehicles = [];
+  Vehicle? _selectedVehicle;  // Track selected vehicle for booking
 
   static const Color _themeBG = Color(0xFFF4F6F8);
   static const Color _themeMain = Color(0xFF1976D2);
@@ -152,9 +153,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     switch (_selectedIndex) {
       case 0:
-        return HomeClientScreen(vehicles: _vehicles);
+        return HomeClientScreen(
+          vehicles: _vehicles,
+          onRentNow: _handleRentNow,  // Add rent now handler
+        );
       case 1:
-        return const Center(child: Text('Bookings Screen'));
+        return BookingScreen(
+          selectedVehicle: _selectedVehicle,
+          themeMain: _themeMain,
+          onBookingComplete: _handleBookingComplete,
+        );
       case 2:
         return VehicleScreen(vehicles: _vehicles, themeMain: _themeMain);
       case 3:
@@ -176,6 +184,22 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         return HomeClientScreen(vehicles: _vehicles);
     }
+  }
+
+  void _handleRentNow(Vehicle vehicle) {
+    setState(() {
+      _selectedVehicle = vehicle;
+      _selectedIndex = 1;  // Switch to bookings tab
+    });
+    _buildHomePage();
+  }
+
+  void _handleBookingComplete() {
+    setState(() {
+      _selectedVehicle = null;
+      _selectedIndex = 0;  // Return to home after booking
+    });
+    _buildHomePage();
   }
 
   void _handleKeepScreenOnChanged(bool value) {
@@ -235,6 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _isSignedIn = false;
         _selectedIndex = 0;
         _vehicles = [];
+        _selectedVehicle = null;
         _initializeSettings();
       });
       _buildHomePage();
@@ -340,8 +365,6 @@ class _MyHomePageState extends State<MyHomePage> {
         onItemSelected: _handleNavItemSelected,
       )
           : null,
-
-
     );
     _updateCurrentScreen();
   }
