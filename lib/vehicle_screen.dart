@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/vehicle.dart';
-import 'booking_screen.dart';
 
 class VehicleScreen extends StatefulWidget {
   final List<Vehicle> vehicles;
   final Color themeMain;
-  final Function(Vehicle) onRentNow;
+  final Function(Vehicle)? onRentNow;
 
   const VehicleScreen({
     super.key,
     required this.vehicles,
-    required this.onRentNow,
     this.themeMain = const Color(0xFF1976D2),
+    this.onRentNow,
   });
 
   @override
@@ -36,8 +35,8 @@ class _VehicleScreenState extends State<VehicleScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFBBDEFB),
-              Colors.white,
+              Color(0xFFBBDEFB),  // Light blue
+              Colors.white,        // White
             ],
             stops: [0.0, 0.6],
           ),
@@ -134,7 +133,11 @@ class _VehicleScreenState extends State<VehicleScreen> {
                               backgroundColor: widget.themeMain,
                               foregroundColor: Colors.white,
                             ),
-                            onPressed: () => widget.onRentNow(vehicle),
+                            onPressed: () {
+                              if (widget.onRentNow != null) {
+                                widget.onRentNow!(vehicle);
+                              }
+                            },
                             child: const Text('Rent Now'),
                           ),
                         ),

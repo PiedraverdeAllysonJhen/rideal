@@ -14,6 +14,7 @@ dependencies:
   # Core utilities
   intl: ^0.18.1
   cupertino_icons: ^1.0.8
+  timeago: ^3.5.0
 
 
   # URL launcher - updated for fix

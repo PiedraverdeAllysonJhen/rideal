@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'notification_screen.dart';
 import 'widgets/loading_screen.dart';
 import 'widgets/personal_island.dart';
 import 'widgets/app_settings_dialog.dart';
@@ -51,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final uuid = const Uuid();
   List<Vehicle> _vehicles = [];
   Vehicle? _selectedVehicle;  // Track selected vehicle for booking
+  final NotificationService _notificationService = NotificationService();
 
   static const Color _themeBG = Color(0xFFF4F6F8);
   static const Color _themeMain = Color(0xFF1976D2);
@@ -87,6 +89,19 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _initializeSettings();
     _initializeRequirements();
+    // Listen to notification changes for UI updates
+    _notificationService.addListener(_onNotificationChanged);
+  }
+
+  @override
+  void dispose() {
+    _notificationService.removeListener(_onNotificationChanged);
+    super.dispose();
+  }
+
+  void _onNotificationChanged() {
+    // Update UI when notifications change (for badge counts, etc.)
+    if (mounted) setState(() {});
   }
 
   void _initializeSettings() {
@@ -167,7 +182,11 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         return VehicleScreen(vehicles: _vehicles, themeMain: _themeMain, onRentNow: _handleRentNow,);
       case 3:
-        return const Center(child: Text('Notifications Screen'));
+        return NotificationScreen(  // Update notifications screen
+          themeMain: _themeMain,
+          themeLite: _themeLite,
+          themeGrey: _themeGrey,
+        );
       case 4:
         return ProfileScreen(
           fullName: _fullName,
