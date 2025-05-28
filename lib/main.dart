@@ -162,9 +162,10 @@ class _MyHomePageState extends State<MyHomePage> {
           selectedVehicle: _selectedVehicle,
           themeMain: _themeMain,
           onBookingComplete: _handleBookingComplete,
+
         );
       case 2:
-        return VehicleScreen(vehicles: _vehicles, themeMain: _themeMain);
+        return VehicleScreen(vehicles: _vehicles, themeMain: _themeMain, onRentNow: _handleRentNow,);
       case 3:
         return const Center(child: Text('Notifications Screen'));
       case 4:

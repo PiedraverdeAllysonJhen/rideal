@@ -6,7 +6,7 @@ import 'widgets/vehicle_categories.dart';
 import 'widgets/featured_vehicles.dart';
 import 'widgets/vehicle_listing.dart';
 import 'models/vehicle.dart';
-
+import 'booking_screen.dart';
 
 class HomeClientScreen extends StatelessWidget {
   final List<Vehicle> vehicles;
@@ -67,7 +67,11 @@ class HomeClientScreen extends StatelessWidget {
             const PromoSliderWidget(),
             VehicleCategoriesWidget(themeMain: themeMain),
             const SizedBox(height: 12),
-            FeaturedVehiclesWidget(vehicles: vehicles, themeMain: themeMain, onRentNow: onRentNow),
+            FeaturedVehiclesWidget(
+              vehicles: vehicles,
+              themeMain: themeMain,
+              onRentNow: onRentNow,
+            ),
             VehicleListingWidget(
               vehicles: vehicles,
               themeMain: themeMain,
