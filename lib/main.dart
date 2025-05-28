@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'admin_requests_screen.dart';
 import 'notification_screen.dart';
 import 'widgets/loading_screen.dart';
 import 'widgets/personal_island.dart';
@@ -134,14 +135,22 @@ class _MyHomePageState extends State<MyHomePage> {
             themeLite: _themeLite,
           );
         case 1:
-          return const Center(child: Text('User Management'));
+          return AdminRequestsScreen( // Updated to new screen
+            themeMain: _themeMain,
+            themeLite: _themeLite,
+            themeGrey: _themeGrey,
+          );
         case 2:
           return AdminPostScreen(
             themeMain: _themeMain,
             headlineFontSize: _headLine2,
           );
         case 3:
-          return const Center(child: Text('Analytics Dashboard'));
+          return NotificationScreen(
+            themeMain: _themeMain,
+            themeLite: _themeLite,
+            themeGrey: _themeGrey,
+          );
         case 4:
           return ProfileScreen(
             fullName: _fullName,
