@@ -180,7 +180,7 @@ class HomeAdminScreen extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: _buildQuickStatItem('Users', '1,234', Icons.people_alt)),
-          Expanded(child: _buildQuickStatItem('Revenue', '\$12,345', Icons.attach_money)),
+          Expanded(child: _buildQuickStatItem('Revenue', '\₱12,345', Icons.currency_exchange)),
           Expanded(child: _buildQuickStatItem('Bookings', '89', Icons.calendar_today)),
         ],
       ),
@@ -278,7 +278,7 @@ class HomeAdminScreen extends StatelessWidget {
       _buildAnalyticsItem('Total Vehicles', vehicles.length.toString()),
       _buildAnalyticsItem('Active Rentals', '24'),
       _buildAnalyticsItem('Registered Users', '1,234'),
-      _buildAnalyticsItem('Monthly Revenue', '\$12,345'),
+      _buildAnalyticsItem('Monthly Revenue', '\₱12,345'),
       _buildAnalyticsItem('Maintenance Issues', '3'),
       _buildAnalyticsItem('Pending Approvals', '5'),
     ];

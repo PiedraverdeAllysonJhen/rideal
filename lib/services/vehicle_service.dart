@@ -77,7 +77,7 @@ class VehicleService {
       ),
       Vehicle(
         id: '8',
-        name: 'Kawasaki Ninja 400',
+        name: 'Kawasaki Ninja',
         price: 60.0,
         rating: 4.9,
         reviews: 110,

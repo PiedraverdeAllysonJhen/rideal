@@ -50,9 +50,9 @@ class _VehicleListingAdminWidgetState extends State<VehicleListingAdminWidget> {
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 0.75,
-            mainAxisSpacing: 8.0,
-            crossAxisSpacing: 8.0,
+            childAspectRatio: 0.60,
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
           ),
           itemCount: _sortedVehicles.length,
           itemBuilder: (context, index) => VehicleCardAdminWidget(

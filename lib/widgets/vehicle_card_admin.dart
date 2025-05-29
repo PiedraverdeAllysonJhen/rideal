@@ -22,7 +22,7 @@ class VehicleCardAdminWidget extends StatelessWidget {
         children: [
           // Image and featured badge (same as client version)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(2.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -40,7 +40,7 @@ class VehicleCardAdminWidget extends StatelessWidget {
                     Text(' ${vehicle.rating} (${vehicle.reviews})'),
                     const Spacer(),
                     Text(
-                      '\$${vehicle.price}/day',
+                      '\₱${vehicle.price}/day',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: themeMain,
