@@ -31,9 +31,9 @@ android {
     signingConfigs {
         release {
             keyAlias 'release'
-            keyPassword 'rideal.app'
-            storeFile file('release-key.jks')
-            storePassword 'rideal.app'
+            keyPassword 'rideal123'
+            storeFile file('upload-keystore.jks')
+            storePassword 'rideal123'
         }
     }
     buildTypes {
