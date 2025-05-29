@@ -68,52 +68,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
     _loadNotifications();
   }
 
+  @override
+  void dispose() {
+    // Remove listener when widget is disposed
+    NotificationService().removeListener(_handleNotificationUpdate);
+    super.dispose();
+  }
+
+  void _handleNotificationUpdate() {
+    // When notifications change in the service, update our local list
+    setState(() {
+      notifications = NotificationService().notifications;
+    });
+  }
+
   void _loadNotifications() {
-    // Sample notifications - in real app, load from database/service
-    notifications = [
-      NotificationItem(
-        id: '1',
-        title: 'Payment Successful',
-        message: 'Your payment of ₱2,400 for Honda Civic has been processed successfully.',
-        timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-        type: 'payment',
-        data: {'vehicleName': 'Honda Civic', 'amount': 2400},
-      ),
-      NotificationItem(
-        id: '2',
-        title: 'Booking Confirmed',
-        message: 'Your booking for Toyota Vios from Jan 28-30 has been confirmed.',
-        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-        type: 'booking',
-        isRead: true,
-        data: {'vehicleName': 'Toyota Vios', 'startDate': '2025-01-28', 'endDate': '2025-01-30'},
-      ),
-      NotificationItem(
-        id: '3',
-        title: 'Pickup Reminder',
-        message: 'Don\'t forget to pick up your Honda Civic tomorrow at 9:00 AM.',
-        timestamp: DateTime.now().subtract(const Duration(hours: 6)),
-        type: 'reminder',
-        data: {'vehicleName': 'Honda Civic', 'pickupTime': '9:00 AM'},
-      ),
-      NotificationItem(
-        id: '4',
-        title: 'Special Offer',
-        message: '20% off on weekend bookings! Valid until January 31st.',
-        timestamp: DateTime.now().subtract(const Duration(days: 1)),
-        type: 'promotion',
-        isRead: true,
-      ),
-      NotificationItem(
-        id: '5',
-        title: 'Return Reminder',
-        message: 'Please return your rented Nissan Almera by 6:00 PM today.',
-        timestamp: DateTime.now().subtract(const Duration(days: 2)),
-        type: 'reminder',
-        data: {'vehicleName': 'Nissan Almera', 'returnTime': '6:00 PM'},
-      ),
-    ];
-    setState(() {});
+
+    setState(() {
+      notifications = NotificationService().notifications;
+    });
+
   }
 
   List<NotificationItem> get filteredNotifications {

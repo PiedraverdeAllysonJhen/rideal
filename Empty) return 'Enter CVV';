@@ -1,0 +1,37 @@
+[33mfb39f09[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m [UI/admin] Initial template of request and notification navigation bar
+[33mb6a042b[m [UI] Enhance user experience
+[33mb75a2a8[m [Notification] Add basic template and functions for notification
+[33mf6a4d30[m [Vehicle] Fix bug rent now button to function
+[33m0918c75[m [Home] Add more vehicles for demo purposes
+[33m405fd84[m [UI] Add Gradient background on booking screen
+[33m04ccb10[m [backend] Change bhServer for testing
+[33m57c8209[m Change backend API for testing
+[33m77811a7[m [UI] Add function to search bar widget
+[33m6575bbf[m [UI|Client] Add initial layout and templane on Bookings NavBar
+[33ma9d64bc[m [UI] Fix Profile Screen bugs
+[33mf33428e[m [UI] Improve authentication screen UI
+[33m65621ba[m [UI] Add loading screen after sign out
+[33me92395d[m [UI|Admin] Fix post navigation bar UI
+[33m1f59a42[m [UI] Fix Profile Section on both sides
+[33mf90e505[m [UI/client] Add vehicle bookmark section
+[33me449ef9[m [UI/Client] Add initial template and bookmark button
+[33m0e5e2e2[m [UI/Admin] Add features on Home button
+[33m6efd387[m [UI/Client] Add basic template and features on Home NavBar and Profile NavBar
+[33m468a020[m Add privacy policy link to login screen
+[33mbbb8148[m [UI] Add necessary contents on post navigation bar
+[33m1b55364[m [UI] Customize the Navigation Bar section
+[33m7664799[m [UI] Change color theme and backend API
+[33m5d8ab77[m style: refine theme colors for UI adjustments
+[33m97a7b72[m feat: add authentication screen with email/password login, retry limit, and toast notifications
+[33m4f7e639[m Add personal_island.dart widget in lib/widgets directory
+[33m2cd1b22[m Add loading_screen.dart widget in lib/widgets directory
+[33mf117c0d[m Add CustomBottomNavBar widget with dynamic navigation items and theming
+[33m1cc0eec[m feat: add AppSettingsDialog widget with theme and user settings UI
+[33m0ddc8f8[m [service] Create database.dart to initialize SQLite with account table schema
+[33m29466dd[m [model] Add Account data model with JSON serialization and utility methods
+[33m3e71f59[m [android] Add INTERNET and WAKE_LOCK permissions to AndroidManifest.xml
+[33m68ecd9d[m [android] Update Gradle wrapper, build scripts, and app configuration for initial Android setup
+[33m52e7b1c[m [dependencies] Add Flutter packages and run setup for flutter_launcher_icons and flutter_native_splash
+[33m4cf74dd[m Edit pubspec.yaml file
+[33m0ae42a5[m [setup] Add assets, fonts, folder structure, and pubspec configuration
+[33m2ea46f4[m [init] Setup initial flutter

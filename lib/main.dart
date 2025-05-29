@@ -21,7 +21,78 @@ import 'home_admin.dart';
 import 'vehicle_screen.dart';
 import 'booking_screen.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  // Sample notifications - in real app, load from database/service
+  final notificationService = NotificationService();
+
+  notificationService.addNotification(
+    NotificationItem(
+      id: '1',
+      title: 'Welcome to Rideal!',
+      message: 'Start by booking your first vehicle',
+      timestamp: DateTime.now(),
+      type: 'promotion',
+    ),
+  );
+
+  notificationService.addNotification(
+    NotificationItem(
+      id: '2',
+      title: 'Payment Successful',
+      message: 'Your payment of ₱2,400 for Honda Civic has been processed successfully.',
+      timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
+      type: 'payment',
+      data: {'vehicleName': 'Honda Civic', 'amount': 2400},
+    ),
+  );
+
+  notificationService.addNotification(
+    NotificationItem(
+      id: '3',
+      title: 'Booking Confirmed',
+      message: 'Your booking for Toyota Vios from Jan 28-30 has been confirmed.',
+      timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+      type: 'booking',
+      isRead: true,
+      data: {'vehicleName': 'Toyota Vios', 'startDate': '2025-01-28', 'endDate': '2025-01-30'},
+    ),
+  );
+
+  notificationService.addNotification(
+    NotificationItem(
+      id: '4',
+      title: 'Pickup Reminder',
+      message: 'Don\'t forget to pick up your Honda Civic tomorrow at 9:00 AM.',
+      timestamp: DateTime.now().subtract(const Duration(hours: 6)),
+      type: 'reminder',
+      data: {'vehicleName': 'Honda Civic', 'pickupTime': '9:00 AM'},
+    ),
+  );
+
+  notificationService.addNotification(
+    NotificationItem(
+      id: '5',
+      title: 'Special Offer',
+      message: '20% off on weekend bookings! Valid until January 31st.',
+      timestamp: DateTime.now().subtract(const Duration(days: 1)),
+      type: 'promotion',
+      isRead: true,
+    ),
+  );
+
+  notificationService.addNotification(
+    NotificationItem(
+      id: '6',
+      title: 'Return Reminder',
+      message: 'Please return your rented Nissan Almera by 6:00 PM today.',
+      timestamp: DateTime.now().subtract(const Duration(days: 2)),
+      type: 'reminder',
+      data: {'vehicleName': 'Nissan Almera', 'returnTime': '6:00 PM'},
+    ),
+  );
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

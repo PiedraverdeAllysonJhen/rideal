@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/vehicle.dart';
 import '../services/notification_service.dart';
+import 'notification_screen.dart';
+
 
 class BookingScreen extends StatefulWidget {
   final Vehicle? selectedVehicle;
@@ -56,18 +58,23 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   void _completeBooking() {
-    if (widget.notificationService != null && widget.selectedVehicle != null) {
-      final startDateStr = _startDate != null
-          ? DateFormat('MMM dd, yyyy').format(_startDate!)
-          : '';
-      final endDateStr = _endDate != null
-          ? DateFormat('MMM dd, yyyy').format(_endDate!)
-          : '';
+    if (widget.selectedVehicle != null && _startDate != null && _endDate != null) {
+      // Generate a unique booking ID (in a real app, this would come from your backend)
+      final bookingId = DateTime.now().millisecondsSinceEpoch.toString();
 
-      widget.notificationService!.addNotification(
-        title: 'Payment Successful! 🎉',
-        message: 'Your booking for ${widget.selectedVehicle!.name} from $startDateStr to $endDateStr has been confirmed. Total: ₱$_totalPrice',
-        type: NotificationType.success,
+      // Add payment success notification
+      NotificationService().addPaymentSuccessNotification(
+        vehicleName: widget.selectedVehicle!.name,
+        amount: _totalPrice,
+        bookingId: bookingId,
+      );
+
+      // Add booking confirmation notification
+      NotificationService().addBookingConfirmationNotification(
+        vehicleName: widget.selectedVehicle!.name,
+        startDate: _startDate!,
+        endDate: _endDate!,
+        bookingId: bookingId,
       );
     }
 
@@ -321,6 +328,25 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   Widget _buildPaymentSection() {
+    // Add a controller and variable to hold the expiry date
+    final expiryDateController = TextEditingController();
+    DateTime? selectedExpiryDate;
+
+    Future<void> _selectExpiryDate(BuildContext context) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(DateTime.now().year + 10),
+      );
+      if (picked != null && picked != selectedExpiryDate) {
+        selectedExpiryDate = picked;
+        // Format the date as MM/YY
+        final formattedDate = "${picked.month.toString().padLeft(2, '0')}/${picked.year.toString().substring(2)}";
+        expiryDateController.text = formattedDate;
+      }
+    }
+
     return Column(
       children: [
         TextFormField(
@@ -335,10 +361,16 @@ class _BookingScreenState extends State<BookingScreen> {
           children: [
             Expanded(
               child: TextFormField(
-                decoration: const InputDecoration(
+                controller: expiryDateController,
+                decoration: InputDecoration(
                   labelText: 'Expiry Date',
-                  prefixIcon: Icon(Icons.calendar_today),
+                  prefixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () => _selectExpiryDate(context),
+                  ),
                 ),
+                readOnly: true, // Prevent manual input
+                onTap: () => _selectExpiryDate(context), // Open date picker when field is tapped
               ),
             ),
             const SizedBox(width: 15),
@@ -349,6 +381,13 @@ class _BookingScreenState extends State<BookingScreen> {
                   prefixIcon: Icon(Icons.lock),
                 ),
                 keyboardType: TextInputType.number,
+                obscureText: true, // Masks input for security
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Enter CVV';
+                  if (value.length < 3 || value.length > 4)
+                    return 'Invalid CVV';
+                  return null;
+                },
               ),
             ),
           ],
