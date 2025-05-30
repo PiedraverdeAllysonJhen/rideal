@@ -5,7 +5,7 @@ plugins {
     // id "com.google.gms.google-services"
 }
 android {
-    namespace = "com.example.rideal"
+    namespace = "com.rideal.app"
     ndkVersion "25.1.8937393"
     compileSdk 35
 
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.rideal"
+        applicationId = "com.rideal.app"
 
         minSdk 23
         targetSdk 35
